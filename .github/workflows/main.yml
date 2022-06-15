@@ -1,4 +1,6 @@
+version:  '3'
 
+services:
 
 name: CI
 
@@ -15,14 +17,13 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
-    
-version: '3'
- 
- services:
+ builds:
+  runs-on: ubuntu-latest
+  
 
+services:
 
- beersnob_database:
+  beersnob_database:
     container_name: beersnob_database
     hostname: beersnob_database
     image: postgres
@@ -38,5 +39,38 @@ version: '3'
     healthcheck:
       test: "exit 0"
 
- 
 
+
+  beersnob_api:
+    container_name: beersnob_api
+    hostname: beersnob_api
+    build:
+      context: ./beersnob_api
+      dockerfile: Dockerfile
+    ports:
+     - 54322:5000
+    volumes:
+      - ./beersnob_api/src/:/usr/src/app/
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${BEERSNOB_ENVIRONMENT}
+    depends_on:
+      - beersnob_database
+
+
+  beersnob_webserver:
+      container_name: beersnob_webserver
+      hostname: beersnob_webserver
+      #image: "nginx:alpine"
+      build:
+          context: ./beersnob_webserver
+          dockerfile: Dockerfile
+      ports:
+        - 80:80
+        - 443:443
+      volumes:
+        - ./beersnob_webserver/src/test:/usr/share/nginx/html
+      restart: always
+      depends_on:
+        - beersnob_database
