@@ -8,30 +8,32 @@ on:
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   Build:
     runs-on: ubuntu-latest
 
+version: "3"
 
-3^3=3*3*3=27
-#include <iostream>
-using namespace std;
-int main() 
-{
-int power;
-float base, result = 1;
-cin >> base >>power;
-while (power != 0) {
-    result *= base;
-    power--;
-}
-cout << result;
-return 0;
-}
 
+services:
+
+  beersnob_database:
+    container_name: beersnob_database
+    hostname: beersnob_database
+    image: postgres
+    volumes:
+      - ./volume:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=beersnobdb, beersnobdb_dev
+      - POSTGRES_USER=mhuls
+      - POSTGRES_PASSWORD=aStrongPassword
+    ports:
+      - 54321:5432
+    restart: unless-stopped
+    healthcheck:
+      test: "exit 0"
 
 
