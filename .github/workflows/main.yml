@@ -18,9 +18,9 @@ jobs:
 version: "3"
 
 
-services:
 
-  beersnob_database:
+ beersnob_database:
+ 
     container_name: beersnob_database
     hostname: beersnob_database
     image: postgres
