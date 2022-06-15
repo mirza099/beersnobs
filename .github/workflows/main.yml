@@ -17,17 +17,47 @@ on:
 jobs:
   Test:
     runs-on: ubuntu-latest
+    name: Docker Image CI
+
+version: '3'
+    
+    
+services:
+
+  beersnob_database:
+    container_name: beersnob_database
+    hostname: beersnob_database
+    image: postgres
+    volumes:
+      - ./volume:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=beersnobdb, beersnobdb_dev
+      - POSTGRES_USER=mhuls
+      - POSTGRES_PASSWORD=aStrongPassword
+    ports:
+      - 54321:5432
+    restart: unless-stopped
+    healthcheck:
+      test: "exit 0"
+
+  build:
+
+    runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+    - name: Run a one-line script
+      run: echo Hello, world!
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
+    - name: Run a multi-line script
+      run: |
           echo Add other actions to build,
           echo test, and deploy your project.
