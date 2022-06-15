@@ -18,11 +18,11 @@ jobs:
   Test:
     runs-on: ubuntu-latest
     name: Docker Image CI
-
 version: '3'
     
     
 services:
+ 
 
   beersnob_database:
     container_name: beersnob_database
@@ -40,15 +40,5 @@ services:
     healthcheck:
       test: "exit 0"
 
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v3
+ 
 
