@@ -6,7 +6,26 @@ on:
   pull_request:
     branches: [ "main" ]
 
-jobs:
+jobs:version: '3'
+
+
+services:
+
+  beersnob_database:
+    container_name: beersnob_database
+    hostname: beersnob_database
+    image: postgres
+    volumes:
+      - ./volume:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=beersnobdb, beersnobdb_dev
+      - POSTGRES_USER=mhuls
+      - POSTGRES_PASSWORD=aStrongPassword
+    ports:
+      - 54321:5432
+    restart: unless-stopped
+    healthcheck:
+      test: "exit 0"
 
   build:
 
