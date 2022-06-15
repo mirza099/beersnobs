@@ -1,61 +1,25 @@
---- 
-jobs: 
-  builds: 
-    runs-on: ubuntu-latest
-    version: "3"
 name: CI
-services: 
-  beersnob_api: 
-    build: 
-      context: ./beersnob_api
-      dockerfile: Dockerfile
-    container_name: beersnob_api
-    depends_on: 
-      - beersnob_database
-    environment: 
-      NODE_ENV: "${BEERSNOB_ENVIRONMENT}"
-    hostname: beersnob_api
-    ports: 
-      - "54322:5000"
-    restart: unless-stopped
-    volumes: 
-      - "./beersnob_api/src/:/usr/src/app/"
-      - /usr/src/app/node_modules
-  beersnob_database: 
-    container_name: beersnob_database
-    environment: 
-      - "POSTGRES_DB=beersnobdb, beersnobdb_dev"
-      - POSTGRES_USER=mhuls
-      - POSTGRES_PASSWORD=aStrongPassword
-    healthcheck: 
-      test: "exit 0"
-    hostname: beersnob_database
-    image: postgres
-    ports: 
-      - "54321:5432"
-    restart: unless-stopped
-    volumes: 
-      - "./volume:/var/lib/postgresql"
-  beersnob_webserver: 
-    build: 
-      context: ./beersnob_webserver
-      dockerfile: Dockerfile
-    container_name: beersnob_webserver
-    depends_on: 
-      - beersnob_database
-    hostname: beersnob_webserver
-    ports: 
-      - "80:80"
-      - "443:443"
-    restart: always
-    volumes: 
-      - "./beersnob_webserver/src/test:/usr/share/nginx/html"
-true: 
-  pull_request: 
-    branches: 
-      - main
-  push: 
-    branches: 
-      - main
-  workflow_dispatch: ~
 
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
