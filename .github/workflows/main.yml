@@ -15,9 +15,9 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  Test:
+  build:
     runs-on: ubuntu-latest
-    name: Docker Image CI
+    
 version: '3'
     
     
